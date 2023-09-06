@@ -1,9 +1,34 @@
-resource "google_service_account" "kubernetes" {
-  account_id = "kubernetes"
+resource "google_service_account" "kubernetes-admin" {
+  account_id = "kubernetes-admin"
 }
 
-resource "google_container_node_pool" "app-node" {
-  name    = "app-node"
+resource "google_container_node_pool" "general" {
+  name       = "general"
+  cluster    = google_container_cluster.primary-cluster.id
+  node_count = 1
+
+  management {
+    auto_repair  = true
+    auto_upgrade = true
+  }
+
+  node_config {
+    preemptible  = false
+    machine_type = "e2-small"
+
+    labels = {
+      role = "general"
+    }
+
+    service_account = google_service_account.kubernetes-admin.email
+    oauth_scopes = [
+      "https://www.googleapis.com/auth/cloud-platform"
+    ]
+  }
+}
+
+resource "google_container_node_pool" "spot" {
+  name    = "spot"
   cluster = google_container_cluster.primary-cluster.id
 
   management {
@@ -21,7 +46,7 @@ resource "google_container_node_pool" "app-node" {
     machine_type = "e2-small"
 
     labels = {
-      node-type = "app-node"
+      team = "devops"
     }
 
     taint {
@@ -30,32 +55,7 @@ resource "google_container_node_pool" "app-node" {
       effect = "NO_SCHEDULE"
     }
 
-    service_account = google_service_account.kubernetes.email
-    oauth_scopes = [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ]
-  }
-}
-
-resource "google_container_node_pool" "mongo-node" {
-  name       = "mongo-node"
-  cluster    = google_container_cluster.primary-cluster.id
-  node_count = 1
-
-  management {
-    auto_repair  = true
-    auto_upgrade = true
-  }
-
-  node_config {
-    preemptible  = false
-    machine_type = "e2-small"
-
-    labels = {
-      role = "mongo-node"
-    }
-
-    service_account = google_service_account.kubernetes.email
+    service_account = google_service_account.kubernetes-admin.email
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
