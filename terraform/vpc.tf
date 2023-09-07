@@ -1,5 +1,7 @@
-resource "google_compute_network" "main" {
-  name                            = "main"
+
+resource "google_compute_network" "main-vpc" {
+  name                            = "main-vpc"
+
   routing_mode                    = "REGIONAL"
   auto_create_subnetworks         = false
   mtu                             = 1460
