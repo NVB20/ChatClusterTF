@@ -1,12 +1,27 @@
 server:
   additionalApplications:
-   - name: cluster-config
+   - name: app-cluster-config
      namespace: argocd
      project: default
      source:
        repoURL: https://github.com/NVB20/chatroom-helm.git
        targetRevision: HEAD
-       path: ""
+       path: "chatroom"
+     destination:
+       server: https://kubernetes.default.svc
+     syncPolicy:
+       automated:
+         prune: true
+         selfHeal: true
+     extraArgs:
+      - --insecure
+   - name: mongo-cluster-config
+     namespace: argocd
+     project: default
+     source:
+       repoURL: https://github.com/NVB20/chatroom-helm.git
+       targetRevision: HEAD
+       path: "mongo"
      destination:
        server: https://kubernetes.default.svc
      syncPolicy:
