@@ -11,7 +11,6 @@ resource "google_compute_subnetwork" "private-subnet" {
   }
   secondary_ip_range {
     range_name = "k8s-service-range"
-    ip_cidr_range = "10.52.0.0/14"
+    ip_cidr_range = "10.52.0.0/20"
   }
-
 }
