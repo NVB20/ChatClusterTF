@@ -1,6 +1,6 @@
 provider "google" {
-  project = "evident-catcher-397908"
-  region  = "us-central1"
+  project = var.project_id
+  region  = var.project_region
 }
 terraform {
   backend "gcs" {
@@ -16,8 +16,3 @@ terraform {
 }
 
 data "google_client_config" "provider" {}
-
-# data "google_container_cluster" "primary-cluster" {
-#   name     = "evident-catcher-397908"
-#   location = "us-central1"
-# }
