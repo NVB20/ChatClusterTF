@@ -1,6 +1,6 @@
 server:
   additionalApplications:
-   - name: app-cluster-config
+   - name: app-argo
      namespace: argocd
      project: default
      source:
@@ -15,7 +15,7 @@ server:
          selfHeal: true
      extraArgs:
       - --insecure
-   - name: mongo-cluster-config
+   - name: mongo-argo
      namespace: argocd
      project: default
      source:

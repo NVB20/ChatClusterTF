@@ -12,10 +12,10 @@ variable "project_region" {
 variable "machine_type_general" {
     description = "The machine type of the general node pool"
     type        = string
-    default     = "e2-small"
+    default     = "e2-medium"
 }
-variable "machine_type_spot" {
-    description = "The machine type of the spot node pool"
+variable "cluster_region" {
+    description = "The region of the GCP project"
     type        = string
-    default     = "e2-small"
+    default     = "us-central1-f"
 }

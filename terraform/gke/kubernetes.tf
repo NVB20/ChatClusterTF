@@ -1,6 +1,6 @@
 resource "google_container_cluster" "primary-cluster" {
   name                     = "primary-cluster"
-  location                 = "us-central1-a"
+  location                 = var.cluster_region
   remove_default_node_pool = true
   initial_node_count       = 1
   network                  = google_compute_network.main-vpc.self_link
@@ -8,10 +8,10 @@ resource "google_container_cluster" "primary-cluster" {
   
   networking_mode          = "VPC_NATIVE"
 
-  # Optional, if you want multi-zonal cluster
-  node_locations = [
-    "us-central1-b"
-  ]
+  # # Optional, if you want multi-zonal cluster
+  # node_locations = [
+  #   "us-central1-b"
+  # ]
 
   addons_config {
     http_load_balancing {
