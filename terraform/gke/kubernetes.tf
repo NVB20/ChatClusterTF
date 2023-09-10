@@ -1,4 +1,5 @@
 resource "google_container_cluster" "primary-cluster" {
+  provider = google-beta
   name                     = "primary-cluster"
   location                 = var.cluster_region
   remove_default_node_pool = true
@@ -15,7 +16,7 @@ resource "google_container_cluster" "primary-cluster" {
 
   addons_config {
     http_load_balancing {
-      disabled = true
+      disabled = false
     }
     horizontal_pod_autoscaling {
       disabled = false
@@ -27,7 +28,7 @@ resource "google_container_cluster" "primary-cluster" {
   }
 
   workload_identity_config {
-    workload_pool = "evident-catcher-397908.svc.id.goog"
+    workload_pool = "${var.project_id}.svc.id.goog"
   }
 
   ip_allocation_policy {
@@ -40,4 +41,13 @@ resource "google_container_cluster" "primary-cluster" {
     enable_private_endpoint = false
     master_ipv4_cidr_block  = "172.16.0.0/28"
   }
+
+  monitoring_config {
+    enable_components = [ "SYSTEM_COMPONENTS" ]
+    
+    managed_prometheus {
+      enabled = true
+    }
+  }
+
 }
