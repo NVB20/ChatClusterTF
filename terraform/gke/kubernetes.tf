@@ -1,7 +1,8 @@
 resource "google_container_cluster" "primary-cluster" {
-  provider = google-beta
   name                     = "primary-cluster"
   location                 = var.cluster_region
+  project = var.project_id
+  
   remove_default_node_pool = true
   initial_node_count       = 1
   network                  = google_compute_network.main-vpc.self_link
@@ -43,8 +44,9 @@ resource "google_container_cluster" "primary-cluster" {
   }
 
   monitoring_config {
-    enable_components = [ "SYSTEM_COMPONENTS" ]
-    
+
+    enable_components = ["SYSTEM_COMPONENTS"]
+
     managed_prometheus {
       enabled = true
     }

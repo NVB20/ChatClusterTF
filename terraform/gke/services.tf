@@ -1,7 +1,9 @@
-resource "google_project_service" "compute" {
-  service = "compute.googleapis.com"
-}
+resource "google_project_service" "api" {
+  for_each = toset([
+    "compute.googleapis.com",
+    "container.googleapis.com"
+  ])
 
-resource "google_project_service" "container" {
-  service = "container.googleapis.com"
+  service            = each.key
+  disable_on_destroy = false
 }
