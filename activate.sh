@@ -1,29 +1,37 @@
 #!/bin/bash
-cd terraform
+
+# Variables
+PROJECT_ID="evident-catcher-397908"
+ZONE="us-central1-a"
+
 # Create GKE Cluster
 echo "Starting GKE cluster creation in Google Cloud"
-cd gke
+cd terraform/gke
 terraform init
 terraform apply -auto-approve
-
-cd ..
+cd -
 echo "GKE cluster creation completed"
 
-echo "connecting to google cloud"
-gcloud container clusters get-credentials primary-cluster --zone us-central1-a --project evident-catcher-397908
+# Connect to Google Cloud
+echo "Connecting to google cloud"
+gcloud container clusters get-credentials primary-cluster --zone $ZONE --project $PROJECT_ID
 
-#prometheus
-echo "giving google managed prometheus access"
-kubectl annotate serviceaccount collector --namespace gmp-system iam.gke.io/gcp-service-account=collector@evident-catcher-397908.iam.gserviceaccount.com
-echo "managed prometheus completed"
+# Google Managed Prometheus
+echo "Giving Google Managed Prometheus access"
+kubectl annotate serviceaccount collector --namespace gmp-system iam.gke.io/gcp-service-account=collector@${PROJECT_ID}.iam.gserviceaccount.com
+echo "Managed Prometheus completed"
 
 # Create ArgoCD
 echo "Starting ArgoCD creation"
-cd argocd
+cd terraform/argocd
 terraform init
 terraform apply -auto-approve
+cd -
+echo "ArgoCD creation completed"
 
-cd ..
-echo "ArgoCD creation completed" 
-kubectl port-forward svc/argocd-server -n argocd  8081:443
-echo "ArgoCD is open on: 127.0.0.1:8081"
+# Opening services to connections
+kubectl port-forward svc/argocd-server -n argocd 8081:443 
+echo "ArgoCD is open on: https://127.0.0.1:8081"
+
+kubectl port-forward -n my-grafana svc/grafana 3000:3000 
+echo "Grafana is open on: http://127.0.0.1:3000"
