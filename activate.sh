@@ -2,7 +2,8 @@
 
 # Variables
 PROJECT_ID="evident-catcher-397908"
-ZONE="us-central1-a"
+ZONE="us-central1-f"
+GRAFANA_NS="grafana"
 
 # Create GKE Cluster
 echo "Starting GKE cluster creation in Google Cloud"
@@ -29,9 +30,6 @@ terraform apply -auto-approve
 cd -
 echo "ArgoCD creation completed"
 
-# Opening services to connections
-kubectl port-forward svc/argocd-server -n argocd 8081:443 
-echo "ArgoCD is open on: https://127.0.0.1:8081"
-
-kubectl port-forward -n my-grafana svc/grafana 3000:3000 
-echo "Grafana is open on: http://127.0.0.1:3000"
+echo "Access Cloud Monitoring via Grafana:"
+echo "Grafana is available at: http://127.0.0.1:3000"
+kubectl port-forward -n ${GRAFANA_NS} svc/grafana 3000:3000
